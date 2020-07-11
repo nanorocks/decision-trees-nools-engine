@@ -1,0 +1,207 @@
+define Product {
+    f1 : '',
+    f2 : '',
+    f3 : '',
+    height: 0,
+    left: false,
+    right: false,
+    root: null,
+    constructor : function(f1, f2, f3){
+        this.f1 = f1;
+        this.f2 = f2;
+        this.f3 = f3;
+        this.height = 0;
+        this.left = false;
+        this.right = false;
+        this.root = null;
+    }
+}
+
+// First iteration
+rule f1IsSmallerThen50 {
+    when {
+        p : Product p.f1 < 50 AND p.height === 0;
+    }
+    then {
+        console.log("Current node: f1 < 50 | Next left node: F2 < 40 ");
+
+        modify(p, function(){
+            p.root = "f1 < 50";
+            p.height = p.height + 1;
+            p.left = true;
+        });
+    }
+}
+
+// First iteration
+rule f1IsBiggerThen50 {
+    when {
+        p : Product p.f1 > 50 AND p.height === 0;
+    }
+    then {
+        console.log("Current node: f1 < 50 | Next right node: F3 < 70 ");
+
+        modify(p, function(){
+            p.root = "f1 < 50";
+            p.height = p.height + 1;
+            p.right = true;
+        });
+    }
+}
+
+// Second iteration
+rule f2IsSmallerThen40 {
+    when {
+        p : Product p.f2 < 40 AND p.height === 1 AND p.left === true AND p.root === "f1 < 50";
+    }
+    then {
+        console.log("Current node: f2 < 40 | Next left node: F1 < 20 ");
+
+        modify(p, function(){
+            p.root = "f2 < 40";
+            p.height = p.height + 1;
+            p.left = true;
+            p.right = false;
+        });
+    }
+}
+
+// Second iteration
+rule f2IsBiggerThen40 {
+    when {
+        p : Product p.f2 > 40 AND p.height === 1 AND p.left === true AND p.root === "f1 < 50";
+    }
+    then {
+        console.log("Current node: f2 < 40 | Next right node: F3 < 30 ");
+
+        modify(p, function(){
+            p.root = "f2 < 40";
+            p.height = p.height + 1;
+            p.left = false;
+            p.right = true;
+        });
+    }
+}
+
+// Second iteration
+rule f3IsSmallerThen70 {
+    when {
+        p : Product p.f3 < 70 AND p.height === 1 AND p.right === true AND p.root === "f1 < 50";
+    }
+    then {
+        console.log("Current node: f3 < 70 | Next left node: F2 < 10 ");
+
+        modify(p, function(){
+            p.root = "f3 < 70";
+            p.height = p.height + 1;
+            p.left = true;
+            p.right = false;
+        });
+    }
+}
+
+// Second iteration
+rule f3IsBiggerThen70 {
+    when {
+        p : Product p.f3 > 70 AND p.height === 1 AND p.right === true AND p.root === "f1 < 50";
+    }
+    then {
+        console.log("Current node: f3 < 70 | Next right node: F1 < 80 ");
+
+        modify(p, function(){
+            p.root = "f3 < 70";
+            p.height = p.height + 1;
+            p.left = false;
+            p.right = true;
+        });
+    }
+}
+
+// Third iteration
+rule f1IsSmallerThen20 {
+    when {
+        p : Product p.f1 < 20 AND p.height === 2 AND p.left === true AND p.root === "f2 < 40";
+    }
+    then {
+        console.log("Current node: f1 < 20 | Next left node: category A");
+        console.log("For (", p.f1 ,",", p.f2,",", p.f3,") we predicted category: A\n");
+    }
+}
+
+// Third iteration
+rule f1IsBiggerThen20 {
+    when {
+        p : Product p.f1 > 20 AND p.height === 2 AND p.left === true AND p.root === "f2 < 40";
+    }
+    then {
+        console.log("Current node: f1 < 20 | Next right node: category B");
+        console.log("For (", p.f1 ,",", p.f2,",", p.f3,") we predicted category: B\n");
+    }
+}
+
+
+// Third iteration
+rule f3IsSmallerThen30 {
+    when {
+        p : Product p.f3 < 30 AND p.height === 2 AND p.right === true AND p.root === "f2 < 40";
+    }
+    then {
+        console.log("Current node: f3 < 30 | Next left node: category C");
+        console.log("For (", p.f1 ,",", p.f2,",", p.f3,") we predicted category: C\n");
+    }
+}
+
+// Third iteration
+rule f3IsBiggerThen30 {
+    when {
+        p : Product p.f3 > 30 AND p.height === 2 AND p.right === true AND p.root === "f2 < 40";
+    }
+    then {
+        console.log("Current node: f3 < 30 | Next right node: category D");
+        console.log("For (", p.f1 ,",", p.f2,",", p.f3,") we predicted category: D\n");
+    }
+}
+
+// Third iteration
+rule f2IsSmallerThen10 {
+    when {
+        p : Product p.f2 < 10 AND p.height === 2 AND p.left === true AND p.root === "f3 < 70";
+    }
+    then {
+        console.log("Current node: f2 < 10 | Next left node: category A");
+        console.log("For (", p.f1 ,",", p.f2,",", p.f3,") we predicted category: A\n");
+    }
+}
+
+// Third iteration
+rule f2IsBiggerThen10 {
+    when {
+        p : Product p.f2 > 10 AND p.height === 2 AND p.left === true AND p.root === "f3 < 70";
+    }
+    then {
+        console.log("Current node: f2 < 10 | Next left node: category B");
+        console.log("For (", p.f1 ,",", p.f2,",", p.f3,") we predicted category: B\n");
+    }
+}
+
+// Third iteration
+rule f1IsSmallerThen80 {
+    when {
+        p : Product p.f1 < 80 AND p.height === 2 AND p.right === true AND p.root === "f3 < 70";
+    }
+    then {
+        console.log("Current node: f1 < 80 | Next left node: category C");
+        console.log("For (", p.f1 ,",", p.f2,",", p.f3,") we predicted category: C\n");
+    }
+}
+
+// Third iteration
+rule f1IsBiggerThen80 {
+    when {
+        p : Product p.f1 > 80 AND p.height === 2 AND p.right === true AND p.root === "f3 < 70";
+    }
+    then {
+        console.log("Current node: f1 < 80 | Next left node: category D");
+        console.log("For (", p.f1 ,",", p.f2,",", p.f3,") we predicted category: D\n");
+    }
+}

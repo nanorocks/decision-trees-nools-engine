@@ -1,0 +1,19 @@
+{
+  "name": "brain-teaser",
+  "version": "1.0.0",
+  "description": "Brain teaser",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "keywords": [
+    "brain",
+    "teaser"
+  ],
+  "author": "Andrej Nankov",
+  "license": "ISC",
+  "dependencies": {
+    "decision-tree": "^0.3.1",
+    "nools": "^0.4.4"
+  }
+}
